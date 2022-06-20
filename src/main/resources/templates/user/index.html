@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <title>勤怠登録</title>
+  <link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c" rel="stylesheet">
+  <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" th:href="@{/resources/demos/style.css}">
+  <link rel="stylesheet" th:href="@{https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css}">
+  <link rel="stylesheet" th:href="@{./css/jquery-ui-timepicker-addon.css}">
+
+  <!-- 現在時刻の表示をします  -->
+  <script>
+    function twoDigit(num) {
+      let ret;
+      if( num < 10 ) 
+        ret = "0" + num; 
+      else 
+        ret = num; 
+      return ret;
+    }
+    function showClock() {
+      let nowTime = new Date();
+      let nowHour = twoDigit( nowTime.getHours() );
+      let nowMin  = twoDigit( nowTime.getMinutes() );
+      let nowSec  = twoDigit( nowTime.getSeconds() );
+      let msg = "現在時刻：" + nowHour + ":" + nowMin + ":" + nowSec;
+      document.getElementById("realtime").innerHTML = msg;
+    }
+    setInterval('showClock()',1000);
+  </script>  
+  
+</head>
+<body>
+	<h1>ホーム</h1>
+	<h2 id="realtime"></h2>	
+	<h3 id="test">勤怠管理</h3>
+	<a>こんにちわ</a>
+	<a th:text="${username.getName()}"></a>
+	<a>さん</a>
+
+	<!-- 
+    <form th:action="@{/month}" method="get">
+        <input id="month" type="month" name="month" onChange="month();"/>
+        <input type="submit" id="msubmit"/>
+    </form>  
+	 -->
+	<script type="text/javascript">
+		document.getElementById('msubmit').style.visibility = 'hidden';
+
+		function month(){
+			var msubmit = document.getElementById('msubmit');
+			msubmit.click();
+			console.log(msubmit);
+		}
+	</script>
+	
+    <table>
+    	<tr>
+    		<th id="list">出勤日</th>
+    		<th id="list">出勤時刻</th>
+    		<th id="list">退勤日</th>
+    		<th id="list">退勤時刻</th>
+    		<th id="list">休憩時間</th>
+    	</tr>
+  		<tr th:each="data : ${attendanceDataList}" th:object="${data}">
+    		<td th:text="*{aday}"></td>
+    		<td th:text="*{atime}"></td>
+    		<td th:text="*{lday}"></td>
+    		<td th:text="*{ltime}"></td>
+    		<td th:text="*{breaktime}"></td>
+    		<td>
+				<a th:href="@{/attendance/edit(id=*{id})}">編集</a> 		
+    		</td>
+    		<td><a th:href="@{/attendance/delete(id=*{id})}">削除</a>
+    		</td>
+    		<th:block th:if="!(*{ltime} == null)">
+    			<th:block th:if="*{atime} > *{ltime}">
+    				<td><font color="red">出勤時間が退勤時間を超えているよ！</font></td>
+    			</th:block>
+    			<th:block th:if="*{atime} == *{ltime}">
+    				<td><font color="red">出勤時間と退勤時間が同じ！</font></td>
+    			</th:block>
+			</th:block>    		
+  		</tr>
+	</table>
+
+    <form th:action="@{/}" method="post">
+		<a>日時</a>
+		<input type="text" id="datetimepicker" name="date" onChange="inputdate(this)">
+		<a>休憩時間</a>
+		<input type="time" name="breaktime" value="01:00" step="3600">
+		<a>－－－－－－→</a>
+		<input type="submit" id="submitdate" onclick="clickPost();" value="勤怠登録">
+    </form>  
+
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="ログアウト" />
+    </form>  
+
+
+	  <script type="text/javascript" th:src="@{webjars/jquery/3.5.1/jquery.min.js}"></script>
+  	  <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js}"></script>
+  	  <script type="text/javascript" th:src="@{https://code.jquery.com/jquery-1.12.4.js}"></script>
+  	  <script type="text/javascript" th:src="@{https://code.jquery.com/ui/1.12.1/jquery-ui.js}"></script>
+      <script type="text/javascript" th:src="@{/js/jquery-ui-timepicker-addon.js}"></script>
+      <script type="text/javascript" th:src="@{/js/jquery-ui-timepicker-ja.js}"></script>
+      <script type="text/javascript" th:src="@{/js/detepicker-ja.js}"></script>
+      <script type="text/javascript" th:src="@{/js/demo.js}"></script>
+  	  <script type="text/javascript" src="/js/test.js" th:src="@{/js/test.js}"></script>  
+
+
+</body>
+</html>

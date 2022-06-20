@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>編集</title>
+<link href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<h1>編集</h1>
+	<a th:href="@{/}">一覧に戻る</a>
+
+   	<form th:action="@{/update}" method="post" th:each="data : ${attendance}" th:object="${data}">
+       	<input type="hidden" name="id" th:value="*{id}" />
+       	<div>
+       	<a>出勤時間</a>
+       	<input type="hidden" name="aday" th:value="*{aday}" />
+       	<input type="time" step="1" name="atime" th:value="*{atime}" />
+       	</div>
+       	<div>
+       	<a>退勤時間</a>
+       	<input type="hidden" name="lday" th:value="*{lday}" />
+       	<input type="time" step="1" name="ltime" th:value="*{ltime}" />
+       	</div>
+       	<div>
+       	<a>休憩時間</a>
+       	<input type="time" step="1" name="breaktime" th:value="*{breaktime}" />
+       	</div>
+       	<input type="submit" value="更新しまーす" />
+   	</form>
+</body>
+</html>
